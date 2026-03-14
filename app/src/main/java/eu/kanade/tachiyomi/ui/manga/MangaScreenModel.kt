@@ -320,10 +320,11 @@ class MangaScreenModel(
             if (isFavorited) {
                 // Remove from library
                 if (updateManga.awaitUpdateFavorite(manga.id, false)) {
-                    // Remove covers and update last modified in db
+                    // Remove covers, update last modified in db and clear custom metadata
                     if (manga.removeCovers() != manga) {
                         updateManga.awaitUpdateCoverLastModified(manga.id)
                     }
+                    setCustomMangaInfo.await(manga.id)
                     withUIContext { onRemoved() }
                 }
             } else {

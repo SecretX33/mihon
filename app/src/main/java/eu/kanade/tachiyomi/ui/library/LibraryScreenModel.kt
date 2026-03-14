@@ -12,6 +12,7 @@ import eu.kanade.core.util.fastFilterNot
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.UpdateManga
+import tachiyomi.domain.manga.interactor.SetCustomMangaInfo
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
 import eu.kanade.presentation.manga.DownloadAction
@@ -78,6 +79,7 @@ class LibraryScreenModel(
     private val setReadStatus: SetReadStatus = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
+    private val setCustomMangaInfo: SetCustomMangaInfo = Injekt.get(),
     private val preferences: BasePreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
@@ -548,6 +550,7 @@ class LibraryScreenModel(
             if (deleteFromLibrary) {
                 val toDelete = mangas.map {
                     it.removeCovers(coverCache)
+                    setCustomMangaInfo.await(it.id)
                     MangaUpdate(
                         favorite = false,
                         id = it.id,
