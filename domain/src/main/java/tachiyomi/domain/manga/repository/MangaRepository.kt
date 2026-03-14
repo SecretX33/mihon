@@ -40,13 +40,4 @@ interface MangaRepository {
 
     suspend fun insertNetworkManga(manga: List<Manga>): List<Manga>
 
-    suspend fun updateCustomInfo(
-        mangaId: Long,
-        customTitle: String?,
-        customAuthor: String?,
-        customArtist: String?,
-        customDescription: String?,
-        customGenre: List<String>?,
-        customStatus: Long?,
-    ): Boolean
 }

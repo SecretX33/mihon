@@ -2,6 +2,15 @@ package tachiyomi.domain.manga.model
 
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 
+data class CustomMangaInfo(
+    val title: String? = null,
+    val author: String? = null,
+    val artist: String? = null,
+    val description: String? = null,
+    val genre: List<String>? = null,
+    val status: Long? = null,
+)
+
 data class MangaUpdate(
     val id: Long,
     val source: Long? = null,
@@ -25,6 +34,7 @@ data class MangaUpdate(
     val initialized: Boolean? = null,
     val version: Long? = null,
     val notes: String? = null,
+    val customInfo: CustomMangaInfo? = null,
 )
 
 fun Manga.toMangaUpdate(): MangaUpdate {

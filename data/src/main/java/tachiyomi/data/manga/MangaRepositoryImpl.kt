@@ -152,34 +152,6 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun updateCustomInfo(
-        mangaId: Long,
-        customTitle: String?,
-        customAuthor: String?,
-        customArtist: String?,
-        customDescription: String?,
-        customGenre: List<String>?,
-        customStatus: Long?,
-    ): Boolean {
-        return try {
-            handler.await {
-                mangasQueries.updateCustomInfo(
-                    mangaId = mangaId,
-                    customTitle = customTitle,
-                    customAuthor = customAuthor,
-                    customArtist = customArtist,
-                    customDescription = customDescription,
-                    customGenre = customGenre,
-                    customStatus = customStatus,
-                )
-            }
-            true
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            false
-        }
-    }
-
     private suspend fun partialUpdate(vararg mangaUpdates: MangaUpdate) {
         handler.await(inTransaction = true) {
             mangaUpdates.forEach { value ->
@@ -208,6 +180,17 @@ class MangaRepositoryImpl(
                     isSyncing = 0,
                     notes = value.notes,
                 )
+                value.customInfo?.let {
+                    mangasQueries.updateCustomInfo(
+                        customTitle = it.title,
+                        customAuthor = it.author,
+                        customArtist = it.artist,
+                        customDescription = it.description,
+                        customGenre = it.genre,
+                        customStatus = it.status,
+                        mangaId = value.id,
+                    )
+                }
             }
         }
     }
