@@ -142,9 +142,13 @@ class MigrateMangaUseCase(
             }
 
             // Migrate custom series info (cover, notes, text metadata)
-            if (MigrationFlag.CUSTOM_INFO in flags && current.hasCustomCover()) {
+            val isMigratingCustomCover = MigrationFlag.CUSTOM_INFO in flags && current.hasCustomCover()
+            if (isMigratingCustomCover) {
                 coverCache.setCustomCoverToCache(target, coverCache.getCustomCoverFile(current.id).inputStream())
             }
+            coverCache.deleteCustomCover(current.id)
+
+            val now = Instant.now().toEpochMilli()
 
             val currentMangaUpdate = MangaUpdate(
                 id = current.id,
@@ -152,14 +156,16 @@ class MigrateMangaUseCase(
                 dateAdded = 0,
                 notes = "",
                 customInfo = CustomMangaInfo.ClearAll,
-            )
-                .takeIf { replace }
+                coverLastModified = now,
+            ).takeIf { replace }
+
             val targetMangaUpdate = MangaUpdate(
                 id = target.id,
                 favorite = true,
                 chapterFlags = current.chapterFlags,
                 viewerFlags = current.viewerFlags,
-                dateAdded = if (replace) current.dateAdded else Instant.now().toEpochMilli(),
+                dateAdded = if (replace) current.dateAdded else now,
+                coverLastModified = if (isMigratingCustomCover) now else target.coverLastModified,
                 notes = if (MigrationFlag.NOTES in flags) current.notes else null,
                 customInfo = if (MigrationFlag.CUSTOM_INFO in flags) {
                     CustomMangaInfo.Set(
