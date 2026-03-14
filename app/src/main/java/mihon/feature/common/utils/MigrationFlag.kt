@@ -8,8 +8,7 @@ fun MigrationFlag.getLabel(): StringResource {
     return when (this) {
         MigrationFlag.CHAPTER -> MR.strings.chapters
         MigrationFlag.CATEGORY -> MR.strings.categories
-        MigrationFlag.CUSTOM_COVER -> MR.strings.custom_cover
-        MigrationFlag.NOTES -> MR.strings.action_notes
         MigrationFlag.REMOVE_DOWNLOAD -> MR.strings.delete_downloaded
+        MigrationFlag.CUSTOM_INFO -> MR.strings.custom_manga_info
     }
 }

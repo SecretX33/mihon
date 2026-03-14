@@ -5,10 +5,10 @@ enum class MigrationFlag(val flag: Int) {
     CATEGORY(0b00010),
 
     // 0b00100 was used for manga trackers
-    CUSTOM_COVER(0b01000),
-    NOTES(0b100000),
-    REMOVE_DOWNLOAD(0b10000),
-    ;
+    // 0b01000 was used for custom cover
+    // 0b100000 was used for notes
+    CUSTOM_INFO(0b01000),
+    REMOVE_DOWNLOAD(0b10000);
 
     companion object {
         fun fromBit(bit: Int): Set<MigrationFlag> {
